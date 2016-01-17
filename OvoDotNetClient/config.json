@@ -1,0 +1,6 @@
+﻿{
+	"ClusterNodes":
+	[
+		{"Host":"localhost","Port":"5050"}
+	]
+}
