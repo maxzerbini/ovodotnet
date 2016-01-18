@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace OvoDotNetClient.Model
 {
+    /// <summary>
+    /// The client configuration.
+    /// </summary>
     public class Configuration
     {
         public List<Node> ClusterNodes {get; set;}

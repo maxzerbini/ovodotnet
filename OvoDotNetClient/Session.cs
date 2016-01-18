@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace OvoDotNetClient
 {
+    /// <summary>
+    /// Http REST client.
+    /// </summary>
     public class Session : IDisposable
     {
         private RestSharp.RestClient _client;
@@ -90,6 +93,150 @@ namespace OvoDotNetClient
             }
         }
 
+        internal void Delete(string key)
+        {
+            OvoResponse<string> response = CallDirectMethod<OvoResponse<string>>(Method.DELETE, EndPoints.CreateGetKeyStorageEndpoint(key), null);
+            if (response != null)
+            {
+                return;
+            }
+            else
+            {
+                throw new Exception("Node not found.");
+            }
+        }
+
+        internal long Count()
+        {
+            OvoResponse<long> response = CallDirectMethod<OvoResponse<long>>(Method.GET, EndPoints.CreateKeyStorageEndpoint(), null);
+            if (response != null)
+            {
+                return response.Data;
+            }
+            else
+            {
+                throw new Exception("Node not found.");
+            }
+        }
+
+        internal List<string> Keys()
+        {
+            OvoResponse<OvoKVKeys> response = CallDirectMethod<OvoResponse<OvoKVKeys>>(Method.GET, EndPoints.CreateKeysEndpoint(), null);
+            if (response != null)
+            {
+                return response.Data.Keys;
+            }
+            else
+            {
+                throw new Exception("Node not found.");
+            }
+        }
+
+        internal byte[] GetAndRemove(string key)
+        {
+            OvoResponse<OvoKVResponse> response = CallDirectMethod<OvoResponse<OvoKVResponse>>(Method.GET, EndPoints.CreateGetAndRemoveEndpoint(key), null);
+            if (response != null)
+            {
+                if (response.Status == "done")
+                    return response.Data.Data;
+                else
+                    return null;
+            }
+            else
+            {
+                throw new Exception("Node not found.");
+            }
+        }
+
+        internal bool UpdateValueIfEqual(OvoKVUpdateRequest req)
+        {
+            OvoResponse<string> response = CallDirectMethod<OvoResponse<string>>(Method.POST, EndPoints.CreateUpdateValueIfEqualEndpoint(req.Key), req);
+            if (response != null)
+            {
+                if (response.Status == "done")
+                    return true;
+                else
+                    return false;
+            }
+            else
+            {
+                throw new Exception("Node not found.");
+            }
+        }
+
+        internal long Increment(OvoCounter req)
+        {
+            OvoCounterResponse response = CallDirectMethod<OvoCounterResponse>(Method.PUT, EndPoints.CreateCountersEndpoint(), req);
+            if (response != null)
+            {
+                if (response.Status == "done")
+                {
+                    return response.Data.Value;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            else 
+            {
+                throw new Exception("Node not found.");
+            }
+        }
+
+        internal long SetCounter(OvoCounter req)
+        {
+            OvoCounterResponse response = CallDirectMethod<OvoCounterResponse>(Method.POST, EndPoints.CreateCountersEndpoint(), req);
+            if (response != null)
+            {
+                if (response.Status == "done")
+                {
+                    return response.Data.Value;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                throw new Exception("Node not found.");
+            }
+        }
+
+        internal long GetCounter(string key)
+        {
+            OvoCounterResponse response = CallDirectMethod<OvoCounterResponse>(Method.GET, EndPoints.CreateCounterEndpoint(key), null);
+            if (response != null)
+            {
+                if (response.Status == "done")
+                {
+                    return response.Data.Value;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                throw new Exception("Node not found.");
+            }
+        }
+
+        internal void DeleteCounter(string key)
+        {
+            OvoCounterResponse response = CallDirectMethod<OvoCounterResponse>(Method.DELETE, EndPoints.CreateCounterEndpoint(key), null);
+            if (response != null)
+            {
+                return;
+            }
+            else
+            {
+                throw new Exception("Node not found.");
+            }
+        }
+
         public void Dispose()
         {
             _client = null;
@@ -141,6 +288,9 @@ namespace OvoDotNetClient
         }
 
         #endregion
+
+
+        
     }
     
 }
