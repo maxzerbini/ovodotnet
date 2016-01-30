@@ -70,5 +70,12 @@ namespace OvoDotNetClient.Util
             sb.Append("/ovo/counters/").Append(key);
             return sb.ToString();
         }
+
+        public static string CreateDeleteValueIfEqualEndpoint(string key)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("/ovo/keystorage/").Append(key).Append("/deletevalueifequal");
+            return sb.ToString();
+        }
     }
 }

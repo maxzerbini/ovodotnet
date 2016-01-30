@@ -157,6 +157,27 @@ namespace TestOvoDotNetClient
             Assert.IsTrue(result3 == 0);
         }
 
+        [TestMethod]
+        public void TestDeleteValueIfEqual()
+        {
+            var p1 = createTestProduct(1000, "soda");
+            _sut.Put("mysoda", p1, 0);
+
+            var p2 = createTestProduct(1001, "coke");
+
+            var result = _sut.DeleteValueIfEqual("mysoda",p2);
+
+            Assert.IsFalse(result);
+
+            result = _sut.DeleteValueIfEqual("mysoda", p1);
+
+            Assert.IsTrue(result);
+
+            Product p3 = _sut.Get<Product>("mysoda");
+
+            Assert.IsTrue(p3==null);
+        }
+
         private Product createTestProduct(Int32 id, String name)
         {
             return new Product()

@@ -733,6 +733,63 @@ namespace OvoDotNetClient
                 throw new Exception(String.Format("Server Node not found for hashcode {0}.", hash));
             }
         }
+        /// <summary>
+        /// Delete an object if its value is not changed.
+        /// </summary>
+        /// <param name="key">the key</param>
+        /// <param name="oldData">the value</param>
+        /// <returns>true if the object has been deleted else false</returns>
+        public bool DeleteValueIfEqual(String key, Object oldData)
+        {
+            if (key == null) throw new Exception("Null key not allowed.");
+            Int32 hash = HashCodeHelper.GetPositiveHashCode(key, MAXSERVERNODES);
+            OvoKVRequest req = new OvoKVRequest()
+            {
+                Data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(oldData)),
+                Hash = hash,
+                Key = key,
+            };
+            var s = _clientsHash[hash];
+            if (s != null)
+            {
+                try
+                {
+                    return s.DeleteValueIfEqual(req);
+                }
+                catch (Exception ex)
+                {
+                    var done = false;
+                    bool result = false;
+                    foreach (var twin in _topology.GetTwins(s.GetNodeTwins()))
+                    {
+                        try
+                        {
+                            var st = _clients[twin.Name];
+                            result = result || st.DeleteValueIfEqual(req);
+                            done = true;
+                        }
+                        catch (Exception)
+                        {
+                            Log(String.Format("Fail connecting node {0}", twin.Name));
+                        }
+                    }
+                    if (!done)
+                    {
+                        Log(String.Format("Fail connecting node {0} and its twins", s.GetNodeName()));
+                        throw ex;
+                    }
+                    else
+                    {
+                        CheckCluster();
+                        return result;
+                    }
+                }
+            }
+            else
+            {
+                throw new Exception(String.Format("Server Node not found for hashcode {0}.", hash));
+            }
+        }
 
         #endregion
 

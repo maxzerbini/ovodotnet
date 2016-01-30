@@ -237,6 +237,22 @@ namespace OvoDotNetClient
             }
         }
 
+        internal bool DeleteValueIfEqual(OvoKVRequest req)
+        {
+            OvoResponse<string> response = CallDirectMethod<OvoResponse<string>>(Method.POST, EndPoints.CreateDeleteValueIfEqualEndpoint(req.Key), req);
+            if (response != null)
+            {
+                if (response.Status == "done")
+                    return true;
+                else
+                    return false;
+            }
+            else
+            {
+                throw new Exception("Node not found.");
+            }
+        }
+
         public void Dispose()
         {
             _client = null;
@@ -290,7 +306,7 @@ namespace OvoDotNetClient
         #endregion
 
 
-        
+
     }
     
 }
