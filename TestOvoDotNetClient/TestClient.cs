@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace TestOvoDotNetClient
 {
     [TestClass]
-    public class UnitClient
+    public class TestClient
     {
         OvoDotNetClient.Client _sut;
 
