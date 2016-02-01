@@ -54,7 +54,7 @@ namespace OvoDotNetClient
         /// <param name="value">the increment value (can be negative)</param>
         /// <param name="ttl">the time to live of the counter</param>
         /// <returns>the update value of the counter (0 if the counter was not found)</returns>
-        long Increment(string key, long value, int ttl);
+        long Increment(string key, long value, int ttl = 0);
         /// <summary>
         /// Get the list of all the keys.
         /// </summary>
@@ -66,14 +66,14 @@ namespace OvoDotNetClient
         /// <param name="key">the key</param>
         /// <param name="data">the data is serialized in JSON and encoded in UTF-8</param>
         /// <param name="ttl">the time to live in seconds</param>
-        void Put(string key, object data, int ttl);
+        void Put(string key, object data, int ttl = 0);
         /// <summary>
         /// Put data in raw format into the OVO storage.
         /// </summary>
         /// <param name="key">the key</param>
         /// <param name="data">the raw data</param>
         /// <param name="ttl">the time to live in seconds</param>
-        void PutRawData(string key, byte[] data, int ttl);
+        void PutRawData(string key, byte[] data, int ttl = 0);
         /// <summary>
         /// Set the value of the counter.
         /// </summary>
@@ -81,7 +81,7 @@ namespace OvoDotNetClient
         /// <param name="value">the counter value</param>
         /// <param name="ttl">the time to live</param>
         /// <returns>the setted counter value</returns>
-        long SetCounter(string key, long value, int ttl);
+        long SetCounter(string key, long value, int ttl = 0);
         /// <summary>
         /// Update an object with the newData if the oldData is equal to the stored data.
         /// </summary>

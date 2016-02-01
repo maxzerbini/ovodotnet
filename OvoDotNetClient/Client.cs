@@ -93,7 +93,7 @@ namespace OvoDotNetClient
         /// <param name="key">the key</param>
         /// <param name="data">the raw data</param>
         /// <param name="ttl">the time to live in seconds</param>
-        public void PutRawData(String key, Byte[] data, Int32 ttl) 
+        public void PutRawData(String key, Byte[] data, Int32 ttl = 0) 
         {
             if (key == null) throw new Exception("Null key not allowed.");
             Int32 hash = HashCodeHelper.GetPositiveHashCode(key, MAXSERVERNODES);
@@ -150,7 +150,7 @@ namespace OvoDotNetClient
         /// <param name="key">the key</param>
         /// <param name="data">the data is serialized in JSON and encoded in UTF-8</param>
         /// <param name="ttl">the time to live in seconds</param>
-        public void Put(String key, Object data, Int32 ttl)
+        public void Put(String key, Object data, Int32 ttl = 0)
         {
             if (key == null) throw new Exception("Null key not allowed.");
             Int32 hash = HashCodeHelper.GetPositiveHashCode(key, MAXSERVERNODES);
@@ -526,7 +526,7 @@ namespace OvoDotNetClient
         /// <param name="value">the increment value (can be negative)</param>
         /// <param name="ttl">the time to live of the counter</param>
         /// <returns>the update value of the counter (0 if the counter was not found)</returns>
-        public long Increment(String key, long value, Int32 ttl)
+        public long Increment(String key, long value, Int32 ttl = 0)
         {
             if (key == null) throw new Exception("Null key not allowed.");
             Int32 hash = HashCodeHelper.GetPositiveHashCode(key, MAXSERVERNODES);
@@ -585,7 +585,7 @@ namespace OvoDotNetClient
         /// <param name="value">the counter value</param>
         /// <param name="ttl">the time to live</param>
         /// <returns>the setted counter value</returns>
-        public long SetCounter(String key, long value, Int32 ttl)
+        public long SetCounter(String key, long value, Int32 ttl = 0)
         {
             if (key == null) throw new Exception("Null key not allowed.");
             Int32 hash = HashCodeHelper.GetPositiveHashCode(key, MAXSERVERNODES);

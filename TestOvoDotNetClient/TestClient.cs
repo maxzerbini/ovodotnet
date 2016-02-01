@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace TestOvoDotNetClient
 {
@@ -29,7 +30,7 @@ namespace TestOvoDotNetClient
             client.SetLog(System.Console.Out);
 
             var p1 = createTestProduct(1, "milk");
-            client.Put("myproduct", p1, 0);
+            client.Put("myproduct", p1);
 
             Product p2 = client.Get<Product>("myproduct");
 
@@ -40,11 +41,23 @@ namespace TestOvoDotNetClient
         public void TestPutAndGet()
         {
             var p1 = createTestProduct(1, "milk");
-            _sut.Put("myproduct", p1, 0);
+            _sut.Put("myproduct", p1);
 
             Product p2 = _sut.Get<Product>("myproduct");
 
             Assert.IsTrue(p1.Name == p2.Name && p1.CreationDate == p2.CreationDate);
+        }
+
+        [TestMethod]
+        public void TestExpiration()
+        {
+            var p1 = createTestProduct(1, "milk");
+            _sut.Put("myExpirableProduct", p1, 5); // 5 secs
+            var p2 = _sut.Get<Product>("myExpirableProduct");
+            Assert.IsTrue(p2 != null);
+            Thread.Sleep(5000);
+            var p3 = _sut.Get<Product>("myExpirableProduct");
+            Assert.IsTrue(p3 == null);
         }
 
         [TestMethod]
@@ -53,7 +66,7 @@ namespace TestOvoDotNetClient
             for (int i = 0; i < 200; i++)
             {
                 var p1 = createTestProduct(i, "milk"+i);
-                _sut.Put("myproduct"+i, p1, 0);
+                _sut.Put("myproduct"+i, p1);
             }
             for (int i = 0; i < 200; i++)
             {
@@ -129,8 +142,8 @@ namespace TestOvoDotNetClient
         public void TestIncrement()
         {
             long increment = 100L;
-            long result1 = _sut.Increment("mycounter1", 11, 0);
-            long result2 = _sut.Increment("mycounter1", increment, 0);
+            long result1 = _sut.Increment("mycounter1", 11);
+            long result2 = _sut.Increment("mycounter1", increment);
 
             Console.WriteLine(String.Format("result1 = {0} - result2 = {1}", result1, result2));
 
@@ -141,8 +154,8 @@ namespace TestOvoDotNetClient
         public void TestSetCounter()
         {
             long increment = 100L;
-            long result1 = _sut.Increment("mycounter2", 11, 0);
-            long result2 = _sut.Increment("mycounter2", increment, 0);
+            long result1 = _sut.Increment("mycounter2", 11);
+            long result2 = _sut.Increment("mycounter2", increment);
             long result3 = _sut.SetCounter("mycounter2", 5, 0);
 
             Console.WriteLine(String.Format("result1 = {0} - result2 = {1} - result3 = {2}", result1, result2, result3));
@@ -154,8 +167,8 @@ namespace TestOvoDotNetClient
         public void TestGetCounter()
         {
             long increment = 100L;
-            long result1 = _sut.Increment("mycounter3", 11, 0);
-            long result2 = _sut.Increment("mycounter3", increment, 0);
+            long result1 = _sut.Increment("mycounter3", 11);
+            long result2 = _sut.Increment("mycounter3", increment);
 
             long result3 = _sut.GetCounter("mycounter3");
 
