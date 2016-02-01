@@ -15,6 +15,27 @@ namespace TestOvoDotNetClient
             _sut = new OvoDotNetClient.Client();
             _sut.SetLog(System.Console.Out);
         }
+
+        [TestMethod]
+        public void TestClientInitialization()
+        {
+            OvoDotNetClient.Model.Configuration config = new OvoDotNetClient.Model.Configuration();
+            config.ClusterNodes.Add(new OvoDotNetClient.Model.Node()
+            {
+                Host = "localhost",
+                Port = 5050
+            });
+            OvoDotNetClient.Client client = new OvoDotNetClient.Client(config);
+            client.SetLog(System.Console.Out);
+
+            var p1 = createTestProduct(1, "milk");
+            client.Put("myproduct", p1, 0);
+
+            Product p2 = client.Get<Product>("myproduct");
+
+            Assert.IsTrue(p1.Name == p2.Name && p1.CreationDate == p2.CreationDate);
+
+        }
         [TestMethod]
         public void TestPutAndGet()
         {

@@ -13,9 +13,17 @@ PM> Install-Package OVOdotNetClient
 
 ### Client initialization
 ```c#
-	OvoDotNetClient.Client client = new OvoDotNetClient.Client();
+	OvoDotNetClient.Client client = new OvoDotNetClient.Client(); // initialize the client using the default configuration file 
     client.SetLog(System.Console.Out); // enable the console logs 
-	
+```
+```c#	
+	OvoDotNetClient.Model.Configuration config = new OvoDotNetClient.Model.Configuration(); // create a client's configuration object
+	config.ClusterNodes.Add(new OvoDotNetClient.Model.Node()
+	{
+		Host = "localhost",
+		Port = 5050
+	});
+	OvoDotNetClient.Client client = new OvoDotNetClient.Client(config);  initialize the client using the configuration object
 ```
 
 ### Put and Get an object
